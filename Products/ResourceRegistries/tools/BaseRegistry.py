@@ -258,11 +258,11 @@ class BaseRegistryTool(UniqueObject, SimpleItem, PropertyManager, Cacheable):
                 data = self.ZCacheable_get(keywords=kw)
             if data is None:
                 # This is the part were we would fail if
-                # we would just return the ressource
+                # we would just return the resource
                 # without using the post_traverse hook:
                 # self.__getitem__ leads (indirectly) to
                 # a restrictedTraverse call which performs
-                # security checks. So if a tool (or its ressource)
+                # security checks. So if a tool (or its resource)
                 # is not "View"able by anonymous - we'd
                 # get an Unauthorized exception.
                 data = self.__getitem__(name)
@@ -620,9 +620,14 @@ class BaseRegistryTool(UniqueObject, SimpleItem, PropertyManager, Cacheable):
                     except TypeError:
                         # Could be a view or browser resource
                         content = obj()
-                    
-                    if IStreamIterator.providedBy(content):
-                        content = content.read()
+
+                    try:
+                        if IStreamIterator.providedBy(content):
+                            content = content.read()
+                    except AttributeError:
+                        # still Plone 3?
+                        if IStreamIterator.isImplementedBy(content):
+                            content = content.read()
                     
                     if not isinstance(content, unicode):
                         content = unicode(content, default_charset)

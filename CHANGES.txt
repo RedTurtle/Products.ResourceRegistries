@@ -9,6 +9,8 @@ Changelog
   ids, like found in the plone.session refresh support.
   [hannosch]
 
+- Restored Plone 3 compatibility [keul]
+
 
 2.0.6 (2011-11-24)
 ------------------
